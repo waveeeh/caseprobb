@@ -1,88 +1,82 @@
-<div class="d-flex flex-wrap justify-content-between">
-    <div class="card" style="flex-basis: 22%; margin: 10px;" *ngFor="let opensea of nft">
-      <img [src]="opensea.imageUrl" class="card-img-top" alt="{{ opensea.name }}">
-      <div class="card-body">
-        <h5 class="card-title"><b>{{ opensea.name }}</b></h5>
-        <p class="card-text"><b>{{ opensea.price }}</b></p>
-        <p class="card-text"><small class="text-body-secondary">Sales end {{ opensea.salesEnd }}</small></p>
-      </div>
-      <div class="d-flex justify-content-end p-2"> 
-        
-        <button type="button" class="btn btn-outline-primary btn-sm" (click)="seeMore()">
-          {{ isHidden ? 'See More' : 'See Less' }}
+<!---Nav Bar-->
+<nav class="navbar bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <img src="https://storage.googleapis.com/opensea-static/Logomark/Logomark-White.svg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+      OpenSea
+    </a>
+  </div>
+</nav>
+
+
+<!-- NFT Card List -->
+<div class="d-flex flex-wrap justify-content-between" *ngIf="!selectedNft">
+  <div class="card" style="flex-basis: 22%; margin: 10px;" *ngFor="let opensea of nft">
+    <img [src]="opensea.imageUrl" class="card-img-top" alt="{{ opensea.name }}">
+    <div class="card-body">
+      <h5 class="card-title"><b>{{ opensea.name }}</b></h5>
+      <p class="card-text"><b>{{ opensea.price }}</b></p>
+      <p class="card-text"><small class="text-body-secondary">Sales end {{ opensea.salesEnd }}</small></p>
+    </div>
+
+    <div class="d-flex justify-content-end p-2">   
+      <button class="btn btn-primary" (click)="selectNft(opensea)">
+        Show More
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- NFT Details View -->
+<div *ngIf="selectedNft">
+  <div class="card mb-4" style="width: 100%; border-radius: 10px;">
+    <div class="row g-0">
+      <div class="col-md-4">
+        <button class="btn btn-primary" 
+          (click)="clearSelection()"
+          style="position: absolute; top: 10px; left: 10px; margin: 10px;">
+          Back
         </button>
+        <img [src]="selectedNft.imageUrl" class="img-fluid rounded-start" alt="{{ selectedNft.name }}">
       </div>
-    </div>
-  </div>
-  
-  <div class="container" *ngFor="let opensea of nft"> 
-    <div class="card mb-4" style="width: 100%; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);"> 
-      <div class="row g-0">
-        <div class="col-md-4">
-          <img 
-            [src]="opensea.imageUrl" 
-            class="img-fluid rounded-start" 
-            alt="{{ opensea.name }}" 
-            style="border-radius: 10px; border: 2px solid #e0e0e0; margin-bottom: 15px;"
-          >
-  
-          <p>
-            <button 
-              class="btn btn-primary" 
-              type="button" 
-              data-bs-toggle="collapse" 
-              data-bs-target="#collapseWidthExample" 
-              aria-expanded="false" 
-              aria-controls="collapseWidthExample"
-            >
-              Details
-            </button>
-          </p>
-          <div style="min-height: 120px;">
-            <div class="collapse collapse-horizontal" id="collapseWidthExample">
-              <div class="card card-body" style="width: 350px;">
-                <p class="card-text mb-0">Contact Address: <b>{{ opensea.contractAddress }}</b></p> 
-                <p class="card-text mb-0">Token ID: <b>{{ opensea.tokenId }}</b></p> 
-                <p class="card-text mb-0" *ngIf="opensea.earring">Earring: <b>{{ opensea.earring }}</b></p> 
-                <p class="card-text mb-0">Token Standard: <b>{{ opensea.tokenStandard }}</b></p> 
-                <p class="card-text mb-0">Chain: <b>{{ opensea.Chain }}</b></p> 
-                <p class="card-text mb-0">Metadata: <b>{{ opensea.metadata }}</b></p> 
-                <p class="card-text mb-0">Creator Earnings: <b>{{ opensea.creatorEarnings }}</b></p> 
-              </div>
-            </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5 class="card-title"><b>{{ selectedNft.name }}</b></h5>
+          <p class="card-text">Owned by: <b>{{ selectedNft.owned }}</b></p>
+          <p class="card-text">Sale ends: <b>{{ selectedNft.salesEnd }}</b></p>
+          <p class="card-text">Current price: <b>{{ selectedNft.price }}</b></p>
+          <p class="card-text">Favorites: {{ selectedNft.favoriteCount }}</p>
+          <div class="attributes">
+            <p class="card-text mb-0">Background: <b>{{ selectedNft.background }}</b></p>
+            <p class="card-text mb-0">Clothes: <b>{{ selectedNft.clothes }}</b></p>
+            <p class="card-text mb-0" *ngIf="selectedNft.earring">Earring: <b>{{ selectedNft.earring }}</b></p>
+            <p class="card-text mb-0">Eyes: <b>{{ selectedNft.eyes }}</b></p>
+            <p class="card-text mb-0">Fur: <b>{{ selectedNft.fur }}</b></p>
+            <p class="card-text mb-0" *ngIf="selectedNft.hat">Hat: <b>{{ selectedNft.hat }}</b></p>
+            <p class="card-text mb-0">Mouth: <b>{{ selectedNft.mouth }}</b></p>
           </div>
-        </div>
-        
-        <div class="col-md-8">
-          <div class="card-body">
-            <h5 class="card-title"><b>{{ opensea.name }}</b></h5>
-            <p class="card-text">Owned by: <b>{{ opensea.owned }}</b></p>
-            <p class="card-text">Sale ends: <b>{{ opensea.salesEnd }}</b></p>
-            <p class="card-text">
-              Current price: <b>{{ opensea.price }}</b> &nbsp; <span>Favorites: {{ opensea.favoriteCount }}</span>
-            </p>
-            
-            <div class="attributes" style="margin-top: 15px;">
-              <p class="card-text mb-0">Background: <b>{{ opensea.background }}</b></p>
-              <p class="card-text mb-0">Clothes: <b>{{ opensea.clothes }}</b></p>
-              <p class="card-text mb-0" *ngIf="opensea.earring">Earring: <b>{{ opensea.earring }}</b></p>
-              <p class="card-text mb-0">Eyes: <b>{{ opensea.eyes }}</b></p>
-              <p class="card-text mb-0">Fur: <b>{{ opensea.fur }}</b></p>
-              <p class="card-text mb-0" *ngIf="opensea.hat">Hat: <b>{{ opensea.hat }}</b></p>
-              <p class="card-text mb-0">Mouth: <b>{{ opensea.mouth }}</b></p>
-            </div>
-  
-            <p class="card-title mt-3">
-              <b>About Bored Ape Yacht Club:</b> <br>{{ opensea.about }}
-            </p>
-          </div>
+          <p class="card-title mt-3"><b>About Bored Ape Yacht Club:</b><br>{{ selectedNft.about }}</p>
         </div>
       </div>
     </div>
   </div>
-  
 
-  
+  <!-- NFT Owner Details -->
+  <div class="card">
+    <div class="card-header">
+      Details
+    </div>
+    <div class="card-body" *ngIf="selectedNft">
+      <blockquote class="blockquote mb-0">
+        <p class="card-text mb-0">Contact Address: <b>{{ selectedNft.contractAddress }}</b></p> 
+        <p class="card-text mb-0">Token ID: <b>{{ selectedNft.tokenId }}</b></p> 
+        <p class="card-text mb-0" *ngIf="selectedNft.earring">Earring: <b>{{ selectedNft.earring }}</b></p> 
+        <p class="card-text mb-0">Token Standard: <b>{{ selectedNft.tokenStandard }}</b></p> 
+        <p class="card-text mb-0">Chain: <b>{{ selectedNft.Chain }}</b></p> 
+        <p class="card-text mb-0">Metadata: <b>{{ selectedNft.metadata }}</b></p> 
+        <p class="card-text mb-0">Creator Earnings: <b>{{ selectedNft.creatorEarnings }}</b></p> 
+      </blockquote>
+    </div>
+  </div>
 
-  
-  
+</div>
